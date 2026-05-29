@@ -29,21 +29,27 @@ pub fn render(template: &str, replacements: &Replacements) -> String {
     let mut templated_string: Vec<String> = Vec::new();
     for line in template.lines() {
         if line.contains("%%PAGE_CONTENT(") {
-            let templated_line = template_file_inject(line);
+            let rough_templated_line = template_file_inject(line);
+            let templated_line = render(rough_templated_line.as_str(), replacements);
             templated_string.push(templated_line);
         } else if line.contains("%%") {
-            let (variable_name, variable_prefix) = get_variable_name(line);
-            let value = replacements.get(variable_name);
-            let templated_line = match value {
-                Some(v) => line.replace(&variable_prefix, &v),
-                None => line.to_string(),
-            };
+            let templated_line = inject_variable(line, replacements);
             templated_string.push(templated_line);
         } else {
             templated_string.push(String::from(line));
         }
     }
     return templated_string.join("\n");
+}
+
+fn inject_variable(line: &str, replacements: &Replacements) -> String {
+    let (variable_name, variable_prefix) = get_variable_name(line);
+    let value = replacements.get(variable_name);
+    let templated_line = match value {
+        Some(v) => line.replace(&variable_prefix, &v),
+        None => line.to_string(),
+    };
+    return templated_line;
 }
 
 fn template_file_inject(template_line: &str) -> String {

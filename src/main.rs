@@ -90,7 +90,7 @@ fn resolve_git_commit(repo_root: &String) -> String {
 
 fn output_git_changes(repo_root: &String) -> io::Result<()> {
     let output = std::process::Command::new("git")
-        .args(["--no-pager", "diff", "HEAD", "HEAD~1"])
+        .args(["--no-pager", "diff", "HEAD~1", "HEAD"])
         .current_dir(repo_root)
         .output()
         .expect("failed to execute process");
