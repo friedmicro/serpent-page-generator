@@ -1,0 +1,10 @@
+[package]
+name = "serpent-page-generator"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pulldown-cmark = { version = "*", default-features = true }
+regex = "1"
+chrono = "0.4.44"
+dircpy = "0.3.20"
